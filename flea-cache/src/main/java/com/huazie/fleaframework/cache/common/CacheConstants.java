@@ -136,6 +136,10 @@ public class CacheConstants {
          */
         String REDIS_CLUSTER_FILE_NAME = "flea/cache/redis.cluster.properties";
         /**
+         * Redis 哨兵配置文件名
+         */
+        String REDIS_SENTINEL_FILE_NAME = "flea/cache/redis.sentinel.properties";
+        /**
          * Redis 配置文件系统环境变量
          */
         String REDIS_CONFIG_FILE_SYSTEM_KEY = "fleacache.redis.config.filename";
@@ -143,6 +147,7 @@ public class CacheConstants {
          * Redis 集群配置文件系统环境变量
          */
         String REDIS_CLUSTER_CONFIG_FILE_SYSTEM_KEY = "fleacache.redis.cluster.config.filename";
+        String REDIS_SENTINEL_CONFIG_FILE_SYSTEM_KEY = "fleacache.redis.sentinel.config.filename";
         /**
          * Redis 分片配置开关（1：开启 0：关闭）
          */
@@ -151,6 +156,7 @@ public class CacheConstants {
          * Redis 集群配置开关（1：开启 0：关闭）
          */
         String REDIS_CLUSTER_CONFIG_SWITCH = "redis.cluster.switch";
+        String REDIS_SENTINEL_CONFIG_SWITCH = "redis.sentinel.switch";
         /**
          * Redis 缓存所属系统名
          */
@@ -163,6 +169,7 @@ public class CacheConstants {
          * Redis 集群服务节点
          */
         String REDIS_CLUSTER_CONFIG_SERVER = "redis.cluster.server";
+        String REDIS_SENTINEL_CONFIG_SERVER = "redis.sentinel.server";
         /**
          * Redis 授权密码
          */
@@ -171,6 +178,7 @@ public class CacheConstants {
          * Redis 授权密码
          */
         String REDIS_CLUSTER_CONFIG_PASSWORD = "redis.cluster.password";
+        String REDIS_SENTINEL_CONFIG_PASSWORD = "redis.sentinel.password";
         /**
          * Redis 服务器权重配置
          */
@@ -183,6 +191,7 @@ public class CacheConstants {
          * Redis 集群客户端socket连接超时时间
          */
         String REDIS_CLUSTER_CONFIG_CONNECTIONTIMEOUT = "redis.cluster.connectionTimeout";
+        String REDIS_SENTINEL_CONFIG_CONNECTIONTIMEOUT = "redis.sentinel.connectionTimeout";
         /**
          * Redis 客户端socket连接超时时间
          */
@@ -191,6 +200,7 @@ public class CacheConstants {
          * Redis 集群客户端socket连接超时时间
          */
         String REDIS_CLUSTER_CONFIG_SOTIMEOUT = "redis.cluster.soTimeout";
+        String REDIS_SENTINEL_CONFIG_SOTIMEOUT = "redis.sentinel.soTimeout";
         /**
          * Redis客户端操作最大尝试次数【包含第一次操作】
          */
@@ -233,6 +243,9 @@ public class CacheConstants {
          * Redis 空缓存数据有效期（单位：s）
          */
         String REDIS_CONFIG_NULLCACHEEXPIRY = "redis.nullCacheExpiry";
+
+        String REDIS_SENTINEL_CONFIG_MASTERNAME = "redis.sentinel.masterName";
+        String REDIS_SENTINEL_CONFIG_DATABASE = "redis.sentinel.dataBase";
     }
 
 }

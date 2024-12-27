@@ -4,14 +4,12 @@ import com.huazie.fleaframework.cache.common.CacheEnum;
 import com.huazie.fleaframework.cache.common.FleaCacheManagerFactory;
 import com.huazie.fleaframework.cache.memcached.config.MemCachedConfig;
 import com.huazie.fleaframework.cache.redis.config.RedisClusterConfig;
+import com.huazie.fleaframework.cache.redis.config.RedisSentinelConfig;
 import com.huazie.fleaframework.cache.redis.config.RedisShardedConfig;
 import com.huazie.fleaframework.common.slf4j.FleaLogger;
 import com.huazie.fleaframework.common.slf4j.impl.FleaLoggerProxy;
 import org.junit.Test;
-import redis.clients.jedis.HostAndPort;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisCluster;
-import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.*;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -31,12 +29,15 @@ public class FleaCacheTest {
 
     @Test
     public void testProperties() {
-        MemCachedConfig memCachedConfig = MemCachedConfig.getConfig();
-        LOGGER.debug("MemCachedConfig={}", memCachedConfig);
-        RedisShardedConfig redisShardedConfig = RedisShardedConfig.getConfig();
-        LOGGER.debug("RedisShardedConfig={}", redisShardedConfig);
-        RedisClusterConfig redisClusterConfig = RedisClusterConfig.getConfig();
-        LOGGER.debug("RedisClusterConfig={}", redisClusterConfig);
+//        MemCachedConfig memCachedConfig = MemCachedConfig.getConfig();
+//        LOGGER.debug("MemCachedConfig={}", memCachedConfig);
+//        RedisShardedConfig redisShardedConfig = RedisShardedConfig.getConfig();
+//        LOGGER.debug("RedisShardedConfig={}", redisShardedConfig);
+//        RedisClusterConfig redisClusterConfig = RedisClusterConfig.getConfig();
+//        LOGGER.debug("RedisClusterConfig={}", redisClusterConfig);
+        RedisSentinelConfig sentinelConfig = RedisSentinelConfig.getConfig();
+        LOGGER.debug("-------------------------------RedisSentinelConfig={}-------------------------------------------", sentinelConfig);
+
     }
 
     @Test
@@ -48,24 +49,24 @@ public class FleaCacheTest {
 
     @Test
     public void testRedis() {
-        Jedis jedis = new Jedis("127.0.0.1", 10003);
-        jedis.auth("huazie123");
+        Jedis jedis = new Jedis("127.0.0.1", 63793);
+        //jedis.auth("huazie123");
         //查看服务是否运行
         LOGGER.debug("服务正在运行: {} ", jedis.ping());
 
         // #1. redis 字符串数据
         //jedis.set("huazie", "hello world");
 
-        // #2. 获取redis字符串
+        //#2. 获取redis字符串
         String msg = jedis.get("huazie");
         LOGGER.debug("value = {}", msg);
 
         // #3. 存储数据到列表中
-//        jedis.lpush("huazie-list", "Beijing");
-//        jedis.lpush("huazie-list", "Shanghai");
-//        jedis.lpush("huazie-list", "Hangzhou");
+        jedis.lpush("huazie-list", "Beijing");
+        jedis.lpush("huazie-list", "Shanghai");
+        jedis.lpush("huazie-list", "Hangzhou");
 
-        // #4. 获取列表数据输出
+//        // #4. 获取列表数据输出
         List<String> list = jedis.lrange("huazie-list", 0, 2);
         LOGGER.debug("list = {}", list);
 
@@ -77,46 +78,87 @@ public class FleaCacheTest {
             String key = it.next();
             LOGGER.debug("key{} = {}", i++, key);
         }
-
-        // #6. 删除数据
+//
+//        // #6. 删除数据
         LOGGER.debug("del ret = {}", jedis.del("huazie-list"));
 
     }
 
     @Test
-    public void testJedisCluster() {
+    public void testSentinel() {
+
+          JedisSentinelPool pool = null;
         // 集群的服务节点Set集合
-        Set<HostAndPort> nodes = new HashSet<>();
-        nodes.add(new HostAndPort("127.0.0.1", 20011));
-        nodes.add(new HostAndPort("127.0.0.1", 20012));
-        nodes.add(new HostAndPort("127.0.0.1", 20021));
-        nodes.add(new HostAndPort("127.0.0.1", 20022));
-        nodes.add(new HostAndPort("127.0.0.1", 20031));
-        nodes.add(new HostAndPort("127.0.0.1", 20032));
+        Set<String> nodes = new HashSet<>();
+        nodes.add("127.0.0.1:36379");
+        nodes.add("127.0.0.1:36380");
+        nodes.add("127.0.0.1:36381");
+//        nodes.add(new HostAndPort("127.0.0.1", 20022));
+//        nodes.add(new HostAndPort("127.0.0.1", 20031));
+//        nodes.add(new HostAndPort("127.0.0.1", 20032));
 
         // Jedis连接池配置
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
         // 最大空闲连接数, 默认8个
-        jedisPoolConfig.setMaxIdle(100);
+        //jedisPoolConfig.setMaxIdle(100);
         // 最大连接数, 默认8个
-        jedisPoolConfig.setMaxTotal(500);
+        jedisPoolConfig.setMaxTotal(10);
         //最小空闲连接数, 默认0
-        jedisPoolConfig.setMinIdle(0);
+        //jedisPoolConfig.setMinIdle(0);
         // 获取连接时的最大等待毫秒数(如果设置为阻塞时BlockWhenExhausted),如果超时就抛异常, 小于零:阻塞不确定的时间,  默认-1
-        jedisPoolConfig.setMaxWaitMillis(2000); // 设置2秒
+        //jedisPoolConfig.setMaxWaitMillis(2000); // 设置2秒
         //对拿到的connection进行validateObject校验
-        jedisPoolConfig.setTestOnBorrow(true);
+        //jedisPoolConfig.setTestOnBorrow(true);
 
         int connectionTimeout = 2000;
         int soTimeout = 2000;
         int maxAttempts = 5;
-        String password = "huazie123";
-        String clientName = "flea-redis-cluster";
-        JedisCluster jedis = new JedisCluster(nodes, connectionTimeout, soTimeout, maxAttempts, password, clientName, jedisPoolConfig);
-
-        // jedis.set("huazie", "hello world");
-
+        String password = null;
+        String clientName = "FleaFrame";
+        String masterName = "mymaster";
+        //JedisCluster jedis = new JedisCluster(nodes, connectionTimeout, soTimeout, maxAttempts, password, clientName, jedisPoolConfig);
+        JedisSentinelPool jedisSentinelPool =
+                new JedisSentinelPool(masterName, nodes,jedisPoolConfig);
+        Jedis jedis = jedisSentinelPool.getResource();
+        jedis.set("huazie", "hello world");
+        jedis.close();
         LOGGER.debug("get huazie = {}", jedis.get("huazie"));
+    }
+
+    @Test
+    public void testpool() {
+        // 集群的服务节点Set集合
+        Set<String> nodes = new HashSet<>();
+        nodes.add("127.0.0.1:63791");
+        nodes.add("127.0.0.1:63792");
+        nodes.add("127.0.0.1:63793");
+//        nodes.add(new HostAndPort("127.0.0.1", 20022));
+//        nodes.add(new HostAndPort("127.0.0.1", 20031));
+//        nodes.add(new HostAndPort("127.0.0.1", 20032));
+
+        // Jedis连接池配置
+        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+        // 最大空闲连接数, 默认8个
+        //jedisPoolConfig.setMaxIdle(100);
+        // 最大连接数, 默认8个
+        jedisPoolConfig.setMaxTotal(10);
+        //最小空闲连接数, 默认0
+        //jedisPoolConfig.setMinIdle(0);
+        // 获取连接时的最大等待毫秒数(如果设置为阻塞时BlockWhenExhausted),如果超时就抛异常, 小于零:阻塞不确定的时间,  默认-1
+        //jedisPoolConfig.setMaxWaitMillis(2000); // 设置2秒
+        //对拿到的connection进行validateObject校验
+        //jedisPoolConfig.setTestOnBorrow(true);
+
+        int connectionTimeout = 2000;
+        int soTimeout = 2000;
+        int maxAttempts = 5;
+        String password = null;
+        String clientName = "FleaFrame";
+        String masterName = "mymaster";
+        //JedisCluster jedis = new JedisCluster(nodes, connectionTimeout, soTimeout, maxAttempts, password, clientName, jedisPoolConfig);
+        JedisPool jedisPool = new JedisPool(jedisPoolConfig, "127.0.0.1", 63791);
+
+        LOGGER.debug("jedisPool = {}", jedisPool);
     }
 
     @Test

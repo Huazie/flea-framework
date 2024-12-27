@@ -7,6 +7,7 @@ import com.huazie.fleaframework.cache.common.CacheModeEnum;
 import com.huazie.fleaframework.cache.common.CacheUtils;
 import com.huazie.fleaframework.cache.redis.RedisClient;
 import com.huazie.fleaframework.cache.redis.config.RedisClusterConfig;
+import com.huazie.fleaframework.cache.redis.config.RedisSentinelConfig;
 import com.huazie.fleaframework.cache.redis.config.RedisShardedConfig;
 import com.huazie.fleaframework.common.CommonConstants;
 import com.huazie.fleaframework.common.slf4j.FleaLogger;
@@ -38,7 +39,7 @@ public class RedisFleaCache extends AbstractFleaCache {
 
     private RedisClient redisClient; // Redis客户端
 
-    private CacheModeEnum cacheMode; // 缓存模式【分片模式和集群模式】
+    private CacheModeEnum cacheMode; // 缓存模式【分片模式和集群模式\哨兵模式】
 
     /**
      * 带参数的构造方法，初始化Redis Flea缓存类
@@ -56,6 +57,8 @@ public class RedisFleaCache extends AbstractFleaCache {
         this.redisClient = redisClient;
         if (CacheUtils.isClusterMode(cacheMode))
             cache = CacheEnum.RedisCluster; // 缓存实现之Redis集群模式
+        else if (CacheUtils.isSentinelMode(cacheMode))
+            cache = CacheEnum.RedisSentinel;  // 缓存实现之Redis哨兵模式
         else
             cache = CacheEnum.RedisSharded; // 缓存实现之Redis分片模式
     }
@@ -101,7 +104,9 @@ public class RedisFleaCache extends AbstractFleaCache {
         if (CacheUtils.isClusterMode(cacheMode))
             // 集群模式下获取缓存归属系统名
             return RedisClusterConfig.getConfig().getSystemName();
-        else
+        else if (CacheUtils.isSentinelMode(cacheMode))
+            // 哨兵模式下获取缓存归属系统名
+            return RedisSentinelConfig.getConfig().getSystemName();
             // 分片模式下获取缓存归属系统名
             return RedisShardedConfig.getConfig().getSystemName();
     }

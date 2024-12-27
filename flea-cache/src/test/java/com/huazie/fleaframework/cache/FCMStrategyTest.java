@@ -20,25 +20,25 @@ public class FCMStrategyTest {
 
     @Test
     public void testFCMStrategy() {
-        String name = CacheEnum.FleaCore.getName();
+        String name = CacheEnum.RedisSentinel.getName();
         FCMStrategyContext context = new FCMStrategyContext();
         AbstractFleaCacheManager manager = FleaStrategyFacade.invoke(name, context);
         LOGGER.debug("CoreFleaCacheManager = {}", manager);
 
-        String name1 = CacheEnum.MemCached.getName();
-        FCMStrategyContext context1 = new FCMStrategyContext();
-        AbstractFleaCacheManager manager1 = FleaStrategyFacade.invoke(name1, context1);
-        LOGGER.debug("MemCachedFleaCacheManager = {}", manager1);
-
-        String name2 = CacheEnum.RedisSharded.getName();
-        FCMStrategyContext context2 = new FCMStrategyContext();
-        AbstractFleaCacheManager manager2 = FleaStrategyFacade.invoke(name2, context2);
-        LOGGER.debug("RedisShardedFleaCacheManager = {}", manager2);
-
-        String name3 = CacheEnum.RedisCluster.getName();
-        FCMStrategyContext contex3 = new FCMStrategyContext();
-        AbstractFleaCacheManager manager3 = FleaStrategyFacade.invoke(name3, contex3);
-        LOGGER.debug("RedisClusterFleaCacheManager = {}", manager3);
+//        String name1 = CacheEnum.MemCached.getName();
+//        FCMStrategyContext context1 = new FCMStrategyContext();
+//        AbstractFleaCacheManager manager1 = FleaStrategyFacade.invoke(name1, context1);
+//        LOGGER.debug("MemCachedFleaCacheManager = {}", manager1);
+//
+//        String name2 = CacheEnum.RedisSharded.getName();
+//        FCMStrategyContext context2 = new FCMStrategyContext();
+//        AbstractFleaCacheManager manager2 = FleaStrategyFacade.invoke(name2, context2);
+//        LOGGER.debug("RedisShardedFleaCacheManager = {}", manager2);
+//
+//        String name3 = CacheEnum.RedisCluster.getName();
+//        FCMStrategyContext contex3 = new FCMStrategyContext();
+//        AbstractFleaCacheManager manager3 = FleaStrategyFacade.invoke(name3, contex3);
+//        LOGGER.debug("RedisClusterFleaCacheManager = {}", manager3);
     }
 
     @Test

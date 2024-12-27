@@ -43,9 +43,9 @@ public class CacheXmlDigesterHelper {
 
     private static volatile CacheXmlDigesterHelper xmlDigester;
 
-    private static final Object fleaCacheInitLock = new Object();
+    private final Object fleaCacheInitLock = new Object();
 
-    private static final Object fleaCacheConfigInitLock = new Object();
+    private final Object fleaCacheConfigInitLock = new Object();
 
     private FleaCache fleaCache;
 

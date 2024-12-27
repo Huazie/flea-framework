@@ -30,6 +30,7 @@ public class FCMStrategyContext extends FleaStrategyContext<AbstractFleaCacheMan
         fleaStrategyMap.put(CacheEnum.RedisSharded.getName(), new RedisShardedFCMStrategy());
         fleaStrategyMap.put(CacheEnum.RedisCluster.getName(), new RedisClusterFCMStrategy());
         fleaStrategyMap.put(CacheEnum.FleaCore.getName(), new CoreFCMStrategy());
+        fleaStrategyMap.put(CacheEnum.RedisSentinel.getName(), new CoreFCMStrategy());
         fleaStrategyMap = Collections.unmodifiableMap(fleaStrategyMap);
     }
 

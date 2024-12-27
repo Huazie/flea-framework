@@ -26,6 +26,7 @@ public enum CacheEnum {
      * 这里缓存实现主要使用集群模式，支持使用Jedis集群实例对象操作Redis缓存。
      */
     RedisCluster("RedisCluster", "一个开源的使用ANSI C语言编写、支持网络、可基于内存亦可持久化的高性能的日志型、Key-Value存储系统。这里缓存实现主要针对集群模式，支持使用Jedis集群实例对象操作Redis缓存。"),
+    RedisSentinel("RedisSentinel", "一个开源的使用ANSI C语言编写、支持网络、可基于内存亦可持久化的高性能的日志型、Key-Value存储系统。这里缓存实现主要针对哨兵模式，支持使用Jedis集群实例对象操作Redis缓存。"),
     /**
      * 一个用于组合并使用其他缓存（如MemCached和Redis）的Flea核心缓存实现。
      */

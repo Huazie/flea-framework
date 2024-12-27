@@ -25,6 +25,11 @@ public class CacheUtils {
         return CacheModeEnum.CLUSTER.getMode() == cacheMode.getMode();
     }
 
+
+    public static boolean isSentinelMode(CacheModeEnum cacheMode) {
+        return CacheModeEnum.SENTINEL.getMode() == cacheMode.getMode();
+    }
+
     /**
      * 从服务器地址字符串创建HostAndPort实例，
      * 该字符串必须是( host + ":" + port ) 格式。

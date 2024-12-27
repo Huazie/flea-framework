@@ -32,8 +32,6 @@ public class FleaCacheManagerFactory {
 
     private static final ConcurrentMap<String, AbstractFleaCacheManager> managerMap = new ConcurrentHashMap<>();
 
-    private static final Object managerMapLock = new Object();
-
     private static final IFleaStrategyContext<AbstractFleaCacheManager, FleaCommonConfig> fleaStrategy = new FCMStrategyContext();
 
     private FleaCacheManagerFactory() {
@@ -48,7 +46,7 @@ public class FleaCacheManagerFactory {
      */
     public static AbstractFleaCacheManager getFleaCacheManager(String name) {
         if (!managerMap.containsKey(name)) {
-            synchronized (managerMapLock) {
+            synchronized (managerMap) {
                 if (!managerMap.containsKey(name)) {
                     managerMap.put(name, FleaStrategyFacade.invoke(name, fleaStrategy));
                 }
