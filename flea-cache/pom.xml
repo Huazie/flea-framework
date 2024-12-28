@@ -69,11 +69,7 @@
             <artifactId>flea-common</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>3.0.1</version>
-        </dependency>
+
 
     </dependencies>
 
